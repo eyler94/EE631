@@ -38,6 +38,16 @@ while True:
         corner[corner>0.01*corner.max()]=[0,0,255]
         cv2.imshow("Corner Detection", corner)
         key = cv2.waitKey(1) & 0xFF
+    elif setting=="d":
+        frame0 = vs.read()
+        frame0 = imutils.resize(frame0, width=600)
+        gray0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2GRAY)
+        frame1 = vs.read()
+        frame1 = imutils.resize(frame1, width=600)
+        gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+        diff = gray0-gray1
+        cv2.imshow("Differencing", diff)
+        key = cv2.waitKey(1) & 0xFF
 
 
     if key == ord("q"): # quit
@@ -55,3 +65,6 @@ while True:
     elif key == ord("c"): # Corner
         cv2.destroyAllWindows()
         setting="c"
+    elif key == ord("d"): # Differencing
+        cv2.destroyAllWindows()
+        setting="d"
