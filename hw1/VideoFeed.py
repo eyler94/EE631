@@ -9,6 +9,7 @@ vs = cv2.VideoCapture(0)
 vs.set(cv2.CAP_PROP_FPS, 15)
 # vs.set(cv.CAP_PROP_FPS, 15)
 setting = "o" # ordinary
+print("Options:\no: Ordinary\nt: Thresholding\na: Canny Difference\nd: Differencing\nl: Line Detection\nc: Corner Detection\nq: quit")
 
 while True:
     if setting=="o": # Ordinary
@@ -30,6 +31,17 @@ while True:
         edge = cv2.Canny(gray, 30, 150)
         cv2.imshow("Canny (edge detection)", edge)
         key = cv2.waitKey(1) & 0xFF
+    elif setting=="d": # Differencing
+        ret, frame0 = vs.read()
+        frame0 = imutils.resize(frame0, width=600)
+        gray0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2GRAY)
+        ret, frame1 = vs.read()
+        frame1 = imutils.resize(frame1, width=600)
+        gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+        diff = cv2.absdiff(gray0,gray1)
+        # diff = gray0-gray1
+        cv2.imshow("Differencing", diff)
+        key = cv2.waitKey(1) & 0xFF
     elif setting=="l": # line detection
         ret, frame = vs.read()
         frame = imutils.resize(frame, width=600)
@@ -37,20 +49,18 @@ while True:
         edge = cv2.Canny(gray, 30, 150)
         lines = cv2.HoughLines(edge, 1, np.pi/180, 200)
         if lines is not None:
-            print("lines:", lines)
             for line in lines:
-                for pixel, theta in line:
+                for radius, theta in line:
                     dx = np.cos(theta)
                     dy = np.sin(theta)
-                    x0 = dx*pixel
-                    y0 = dy*pixel
-                    x1 = int(x0 - 1000*dx) # Why -+, +-?
-                    y1 = int(y0 + 1000*dy)
-                    x2 = int(x0 + 1000*dx)
-                    y2 = int(y0 - 1000*dy)
-                    print("points(x1,y1), (x2,y2)", x1, y1, x2, y2)
-                    cv2.line(gray, (x1,y1), (x2,y2), (0,0,255), 2)
-        cv2.imshow("Line detection", gray)
+                    x0 = dx*radius
+                    y0 = dy*radius
+                    x1 = int(x0 - 1000*dy) # Why -+, +-?
+                    y1 = int(y0 + 1000*dx)
+                    x2 = int(x0 + 1000*dy)
+                    y2 = int(y0 - 1000*dx)
+                    cv2.line(frame, (x1,y1), (x2,y2), (0,0,255), 2)
+        cv2.imshow("Line detection", frame)
         key = cv2.waitKey(1) & 0xFF
     elif setting=="c": # Corner detection
         ret, frame = vs.read()
@@ -65,18 +75,6 @@ while True:
         # # corner[corner>0.01*corner.max()]=[0,0,255]
         cv2.imshow("Corner Detection", corner)
         key = cv2.waitKey(1) & 0xFF
-    elif setting=="d": # Differencing
-        ret, frame0 = vs.read()
-        frame0 = imutils.resize(frame0, width=600)
-        gray0 = cv2.cvtColor(frame0, cv2.COLOR_BGR2GRAY)
-        ret, frame1 = vs.read()
-        frame1 = imutils.resize(frame1, width=600)
-        gray1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
-        diff = cv2.absdiff(gray0,gray1)
-        # diff = gray0-gray1
-        cv2.imshow("Differencing", diff)
-        key = cv2.waitKey(1) & 0xFF
-
 
     if key == ord("q"): # quit
         vs.release()
