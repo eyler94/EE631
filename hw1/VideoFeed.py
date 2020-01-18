@@ -21,7 +21,7 @@ while True:
         ret, frame = vs.read()
         frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY_INV)[1]
+        _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
         cv2.imshow("Thresholding", thresh)
         key = cv2.waitKey(1) & 0xFF
     elif setting=="a": # Canny difference
@@ -51,14 +51,14 @@ while True:
         if lines is not None:
             for line in lines:
                 for radius, theta in line:
-                    dx = np.cos(theta)
-                    dy = np.sin(theta)
-                    x0 = dx*radius
-                    y0 = dy*radius
-                    x1 = int(x0 - 1000*dy) # Why -+, +-?
-                    y1 = int(y0 + 1000*dx)
-                    x2 = int(x0 + 1000*dy)
-                    y2 = int(y0 - 1000*dx)
+                    c_theta = np.cos(theta)
+                    s_theta = np.sin(theta)
+                    x0 = c_theta*radius
+                    y0 = s_theta*radius
+                    x1 = int(x0 - 1000*s_theta)
+                    y1 = int(y0 + 1000*c_theta)
+                    x2 = int(x0 + 1000*s_theta)
+                    y2 = int(y0 - 1000*c_theta)
                     cv2.line(frame, (x1,y1), (x2,y2), (0,0,255), 2)
         cv2.imshow("Line detection", frame)
         key = cv2.waitKey(1) & 0xFF
@@ -67,13 +67,23 @@ while True:
         frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         gray_f32 = np.float32(gray)
-        corners = cv2.cornerHarris(gray, 2, 3, 0.04)
-        corner = cv2.cornerSubPix(gray, corners, (5,5), (-1,-1), )
-        # corner = cv2.dilate(corner,None)
-        # ret, dst = cv2.threshold(corner, 0.01*corner.max(), 255,0)
-        #
-        # # corner[corner>0.01*corner.max()]=[0,0,255]
-        cv2.imshow("Corner Detection", corner)
+        corner = cv2.cornerHarris(gray, 2, 3, 0.04)
+        corner_dil = cv2.dilate(corner,None)
+        _, corner_thresh = cv2.threshold(corner_dil, 0.01*corner_dil.max(), 255, cv2.THRESH_BINARY)
+        corner_ui8 = np.uint8(corner_thresh)
+
+        #### Andy's code
+        _, _, _, centroids = cv2.connectedComponentsWithStats(corner_ui8) # don't know :|
+
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001) # create object of 'criteria' data
+        corners = cv2.cornerSubPix(gray, np.float32(centroids), (5, 5), (-1, -1), criteria) # find sub pixel corners
+
+        if corners is not None: # if there are corners detected
+            for point in corners[1:]: # why is there a ghost artifact in the first element
+        ####
+                cv2.circle(frame, (point[0], point[1]), 2, (0, 0, 255), 2)
+
+        cv2.imshow("Corner Detection", frame)
         key = cv2.waitKey(1) & 0xFF
 
     if key == ord("q"): # quit
