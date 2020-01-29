@@ -62,7 +62,7 @@ while True:
 
     # sum_avg = np.int((sum4+sum3+sum2+sum1+sum0)/5)
     # print(sum_avg)
-    sum_set = np.array([sum0, sum1, sum2, sum3, sum4])
+    sum_set = np.array([sum0, sum1, sum2])#, sum3, sum4])
     print("sum_set:", sum_set)
     # sum_logic = sum_set>=90
     # print("sum_logic:", sum_logic)
