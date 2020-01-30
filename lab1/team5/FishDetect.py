@@ -4,18 +4,23 @@ import numpy as np
 import cv2 as cv
 import argparse
 from time import sleep
+from Flea2Camera import FleaCam
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to video file.")
-ap.add_argument("-t", "--train", help="run the training program instead of using default values")
 args = vars(ap.parse_args())
 
+
 if not args.get("video"):
-    print("Got no video path, using webcam.")
-    cap = cv.VideoCapture(0)
+    print("Using FleaCam.")
+    from Flea2Camera import FleaCam
+    cap = FleaCam()
 else:
     print("Opening the following video: ", args.get("video"))
     cap = cv.VideoCapture(args["video"])
+
+
+
 
 sleep(1)
 print("q: quit\np: pause")
@@ -35,12 +40,13 @@ sum12 = 0
 sum13 = 0
 sum14 = 0
 while True:
-    _, frame0 = cap.read()
-
+    #_, frame0 = cap.read()
+    frame0 = cap.getFrame()
     #####################
     # Work the video
     #####################
-    _, frame1 = cap.read()
+    #_, frame1 = cap.read()
+    frame1 = cap.getFrame()
     if frame1 is None:
         break
 
@@ -92,7 +98,7 @@ while True:
             caption = "no target"
             # print(caption)
     if sum0 >= 90:
-        sum_check = sum9
+        sum_check = sum4
         if sum_check>=270:
             caption = "yellow"
             print(caption)
