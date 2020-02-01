@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 from Flea2Camera import FleaCam
 
-beltThreshold = 20
+beltThreshold = 30
 
 cap = FleaCam()
 color_counter = 0
@@ -36,19 +36,22 @@ while True:
     if frame1 is None:
         break
 
+    frame0 = cv.cvtColor(frame0, cv.COLOR_BGR2HSV)
+    frame1 = cv.cvtColor(frame1, cv.COLOR_BGR2HSV)
     diff = cv.absdiff(frame0,frame1)
     blur = cv.GaussianBlur(diff, (5,5), 0)
-    erode = cv.erode(blur, None, iterations=5)
-    dilate = cv.dilate(erode, None, iterations=100)
+    erode = cv.erode(blur, None, iterations=3)
+    dilate = cv.dilate(erode, None, iterations=10)
 
     frame = dilate
     b, g, r = cv.split(frame)
     b = np.max(np.uint32(b))
     g = np.max(np.uint32(g))
     r = np.max(np.uint32(r))
-    print("Blue max:", np.max(b))
-    print("Green max:", np.max(g))
-    print("Red max:", np.max(r))
+    check = np.array([b, g, r])>=20
+    if all(check):
+        # print("Blue max:", np.max(b), "Green max:", np.max(g), "Red max:", np.max(r))
+        print(np.max(b), np.max(g), np.max(r))
 
     if np.average([b, g, r]) > beltThreshold:
         if color_counter == 0:
