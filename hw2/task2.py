@@ -6,16 +6,32 @@ from task1 import disp_check, ret_corners
 corners_h = 7
 corners_w = 10
 
-obj_points = []
-image_points = []
+list_obj_points = [] # list of point vectors in 3d space
+list_image_points = [] # list of point vectors in the image plane
+
+obj_points = np.zeros((corners_h*corners_w,3), dtype = np.float32) ### Is vec3f float32?
+obj_points[:,:2] = np.mgrid[0:corners_h,0:corners_w].T.reshape(-1,2)
+
 
 for num in range(1,41):
     img_path = "AR"+str(num)+".jpg"
     corners, img = ret_corners(img_path)
-    print("corners:", corners)
     status=True
     cv2.drawChessboardCorners(img, (corners_w,corners_h), corners, status)
     cv2.imshow("frame", img)
-    cv2.waitKey(10)
-    img_points.append(corners)
-    # cv2.calibrateCamera()
+    cv2.waitKey(5)
+    list_image_points.append(corners)
+    list_obj_points.append(obj_points)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+_, cameraMatrix, distCoeffs, rvecs, tvecs = cv2.calibrateCamera(list_obj_points, list_image_points, gray.shape[::-1], None, None)
+print("Intrinsic parameters:\n", cameraMatrix)
+distCoeffs = distCoeffs.T
+print("Distortion coeffecients:\n", distCoeffs)#, rvecs, tvecs)
+
+unit_conv = 7.4e-3 ## mm/pix
+fsx = cameraMatrix[0,0]
+focal_length = fsx*unit_conv
+print("Focal length:\n", focal_length)
+
+np.save('cameraMatrix.npy', cameraMatrix)
+np.save('distCoeffs.npy', distCoeffs)

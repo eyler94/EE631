@@ -11,6 +11,7 @@ def disp_check(img = cv2.imread("AR1.jpg")):
     cv2.drawChessboardCorners(img, (10,7), corners, status)
 
     frame = img
+    print("frame shape:", frame.shape[::-1])
     cv2.imshow("frame", frame)
     cv2.waitKey(0)
 
