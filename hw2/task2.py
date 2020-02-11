@@ -3,21 +3,21 @@ import numpy as np
 import cv2
 from task1 import disp_check, ret_corners
 
-corners_h = 7
-corners_w = 10
+corners_x = 10
+corners_y = 7
 
 list_obj_points = [] # list of point vectors in 3d space
 list_image_points = [] # list of point vectors in the image plane
 
-obj_points = np.zeros((corners_h*corners_w,3), dtype = np.float32) ### Is vec3f float32?
-obj_points[:,:2] = np.mgrid[0:corners_h,0:corners_w].T.reshape(-1,2)
+obj_points = np.zeros((corners_x*corners_y,3), dtype = np.float32) ### Is vec3f float32?
+obj_points[:,:2] = np.mgrid[0:corners_x,0:corners_y].T.reshape(-1,2)
 
 
 for num in range(1,41):
     img_path = "AR"+str(num)+".jpg"
     corners, img = ret_corners(img_path)
     status=True
-    cv2.drawChessboardCorners(img, (corners_w,corners_h), corners, status)
+    cv2.drawChessboardCorners(img, (corners_x,corners_y), corners, status)
     cv2.imshow("frame", img)
     cv2.waitKey(5)
     list_image_points.append(corners)
@@ -35,3 +35,9 @@ print("Focal length:\n", focal_length)
 
 np.save('cameraMatrix.npy', cameraMatrix)
 np.save('distCoeffs.npy', distCoeffs)
+
+from task3 import ShowDistort
+
+ShowDistort('Far',cameraMatrix, distCoeffs)
+ShowDistort('Close',cameraMatrix, distCoeffs)
+ShowDistort('Turned',cameraMatrix, distCoeffs)
