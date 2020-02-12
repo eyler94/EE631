@@ -4,4 +4,4 @@
 *.avi
 *.mp4
 ./.idea
-./hw*/__pycache__
+./hw*/__pycache__/*
