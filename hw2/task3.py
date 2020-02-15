@@ -5,7 +5,7 @@ import cv2
 def ShowDistort(img_name, cameraMatrix, distCoeffs):
     img = cv2.imread(f"./{img_name}.jpg")
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    undist = cv2.undistort(gray, cameraMatrix, distCoeffs, None, cameraMatrix)
+    undist = cv2.undistort(gray, cameraMatrix, distCoeffs)#, None, cameraMatrix)
     diff = cv2.absdiff(gray,undist)
     cv2.imshow("original", gray)
     cv2.imshow("undistorted", undist)
