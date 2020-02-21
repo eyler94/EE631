@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 import numpy as np
 import cv2
+import imutils
 
 def ShowDistort(img_name, cameraMatrix, distCoeffs):
     img = cv2.imread(f"./{img_name}.jpg")
+    img = imutils.resize(img, width=600)
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     undist = cv2.undistort(gray, cameraMatrix, distCoeffs)#, None, cameraMatrix)
     diff = cv2.absdiff(gray,undist)
