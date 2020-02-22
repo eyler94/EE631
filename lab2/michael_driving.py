@@ -59,36 +59,15 @@ def find_angle(frame, num_rows, num_cols):
 	return angle
 
 
-#	max_val = 50651
-
-#	frame_l = frame[:,:int(frame.shape[1]/2)] 	# Left half of image
-#	num_pix_l = cv2.countNonZero(frame_l) 	# Number of nonzero pixels in left image
-#	frame_r = frame[:,int(frame.shape[1]/2):] 	# Right half of image
-#	num_pix_r = cv2.countNonZero(frame_r) 	# Number of nonzero pixels in right image
-#	diff = num_pix_r - num_pix_l
-#	if abs(diff) > max_val:
-#		max_val = abs(diff)
-#	if abs(diff) > threshold:
-#		caption = "Turn " + str(diff) + "!"
-#		angle = -diff*steering
-#	else: 
-#		angle = 0
-#	return angle
-
 sleep(1)
 car = Car_driver() 	# Instantiate the car object
 car.drive(.8) 	# Send a speed command to the car
 
-##Create Video recorder
-#fourcc = cv2.VideoWriter_fourcc(*'XVID')
-#out = cv2.VideoWriter('output.avi',fourcc, 20.0, (int(dilate.shape[0]),int(dilate.shape[1])))
-
-
 while True:
 	dilate = vid_process() 	# Capture and process frame from the video
-	angle = find_angle(dilate, 1, 7) 	# Determine the steering angle based off the image and number of rows and columns.
+	angle = find_angle(dilate, 1, 5) 	# Determine the steering angle based off the image and number of rows and columns.
 	car.steer(angle) 	# Send the steering command to the car
-#	out.write(dilate)
+
 	# GUI interface stuff. Make sure to comment this out to save processing time.
 #	print("Turn:", angle)
 #	caption = "Turn " + str(angle) + "!"
