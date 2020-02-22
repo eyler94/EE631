@@ -25,9 +25,9 @@ while True:
     frame = frame[150:, :]
     hsv_image = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)              # Convert bgr to hsv
     sat = cv2.extractChannel(hsv_image, 1)                          # Extract saturation channel
-    _, thresh = cv2.threshold(sat, 75, 255, cv2.THRESH_BINARY)  # Binaryize image
+    _, thresh = cv2.threshold(sat, 50, 255, cv2.THRESH_BINARY)  # Binaryize image
     kernel = np.ones((3,3), np.uint8)
-    erode = cv2.erode(thresh, kernel, iterations=15)
+    erode = cv2.erode(thresh, kernel, iterations=17)
     dilate = cv2.dilate(erode, kernel, iterations=50)
     # Display image
     cv2.imshow("frame", erode)
