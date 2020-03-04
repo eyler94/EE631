@@ -22,7 +22,7 @@ for num in range(1,41):
     cv2.waitKey(5)
     list_image_points.append(corners)
     list_obj_points.append(obj_points)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 _, cameraMatrix, distCoeffs, rvecs, tvecs = cv2.calibrateCamera(list_obj_points, list_image_points, gray.shape[::-1], None, None)
 print("Intrinsic parameters:\n", cameraMatrix)
 distCoeffs = distCoeffs.T
