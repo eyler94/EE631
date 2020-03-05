@@ -4,6 +4,7 @@
 *.bmp
 *.avi
 *.mp4
+*.zip
 ./.idea
 ./hw*/__pycache__/*
 
