@@ -57,4 +57,16 @@ if __name__=="__main__":
     points_3d = cv2.perspectiveTransform(points,Q)
     print("3d points:", points_3d)
 
+    points = np.zeros((4,1,3))
+    for row_iter, col in enumerate(points):
+        col[0,0] = corners_undistorted_r[row_iter][0][0]
+        col[0,1] = corners_undistorted_r[row_iter][0][1]
+        col[0,2] = corners_undistorted_l[row_iter][0][0]-corners_undistorted_r[row_iter][0][0]
+    # points = points.T
+    print("points:\n", points)
+    Q = np.load('Q.npy')
+    points_3d = cv2.perspectiveTransform(points,Q)
+    print("3d points:", points_3d)
+
+
     cv2.waitKey(0)
