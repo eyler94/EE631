@@ -28,7 +28,7 @@ if __name__=="__main__":
     P1 = np.load('P1.npy')
     status=True
     special_corners = [0, 9, -10, -1]
-    # print("corners:\n", corners_l[special_corners])
+    print("corners:\n", corners_l[special_corners])
     corners_undistorted_l = cv2.undistortPoints(corners_l[special_corners], cameraMatrix_l, distCoeffs_l, R=R1, P=P1)
     # print("corners_undistorted_l:\n", corners_undistorted_l)
     cv2.drawChessboardCorners(img_l, (2,2), corners_l[special_corners], status)
