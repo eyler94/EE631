@@ -4,17 +4,17 @@ import numpy as np
 import cv2
 
 
-buffer = 60
-
-x_l = 360
-y_l = 100
-x_r = 277
-y_r = 100
-kernel = np.ones((5,5))
+# buffer = 60
+#
+# x_l = 360
+# y_l = 100
+# x_r = 277
+# y_r = 100
+kernel = np.ones((5,5), np.uint8)
 counter = 0
 
 def ret_img_and_ball_centroids(img, xl, xh, yl, yh):
-    cv2.rectangle(img,(xl,yl),(xh,yh),(0,255,0),2)
+    # cv2.rectangle(img,(xl,yl),(xh,yh),(0,255,0),2)
     left_cropped = img[yl:yh, xl:xh]
     left_gray = cv2.cvtColor(left_cropped, cv2.COLOR_BGR2GRAY)
     _, left_thresh = cv2.threshold(left_gray, 50, 255, cv2.THRESH_BINARY)
@@ -40,19 +40,16 @@ _, frame_r = cap_r.read()
 
 while frame_l is not None:
     _, frame_l = cap_l.read()
-    frame_l, cent_l = ret_img_and_ball_centroids(frame_l, 295, 295+130, 20, 170)
+    frame_l, cent_l = ret_img_and_ball_centroids(frame_l, 295, 295+130, 20, 220)
     print("left cent:", cent_l)
     cv2.imshow("left:", frame_l)
 
     _, frame_r = cap_r.read()
-    frame_r, cent_r = ret_img_and_ball_centroids(frame_r, 212, 342, 20, 170)
+    frame_r, cent_r = ret_img_and_ball_centroids(frame_r, 212, 342, 20, 220)
     print("right cent:", cent_r)
     cv2.imshow("right:", frame_r)
 
-    if cent_l[0] == 0:
-        key = cv2.waitKey(1)
-        counter = 0
-    else:
+    if not cent_l[0] == 0 and not cent_r[0] == 0:
         counter+=1
         print("counter:", counter)
         key = cv2.waitKey(0) & 0xFF
@@ -60,3 +57,6 @@ while frame_l is not None:
             print("counter:", counter)
             cv2.imwrite(f'leftframe_{counter}.png',frame_l)
             cv2.imwrite(f'rightframe_{counter}.png',frame_r)
+    else:
+        key = cv2.waitKey(1)
+        counter = 0

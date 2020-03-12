@@ -61,9 +61,9 @@ while frame_l is not None:
     # print("right cent:", cent_r)
     cv2.imshow("right:", frame_r)
 
-    if cent_l[0] == 0:
+    if cent_l[0] == 0 or cent_r[0] == 0:
         key = cv2.waitKey(1)
-        if counter>20:
+        if counter>15:
             print("3d points:", points_3d)
             np.save('points_3d.npy',points_3d)
             break
@@ -84,7 +84,15 @@ while frame_l is not None:
             page[row][y] = cent_l[0][page_iter][row][y]
             page[row][disparity] = cent_l[0][page_iter][row][x]-cent_r[0][page_iter][row][x]
         if not found_ball:
+            print("points:", points)
             points_3d = cv2.perspectiveTransform(points,Q)
         else:
+            print("points:", points)
             points_3d = np.vstack((points_3d,cv2.perspectiveTransform(points,Q)))
         found_ball = True
+
+points_catcher = points_3d-np.array([11.5, 29.5, 21.5])
+
+import matplotlib.pyplot as plt
+fig1 = plt.figure(1)
+plt.plot(points_catcher.T[2],points_catcher.T[0])
