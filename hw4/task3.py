@@ -57,7 +57,7 @@ while frame_l is not None:
     cv2.imshow("left:", frame_l)
 
     _, frame_r = cap_r.read()
-    frame_r, cent_r = ret_img_and_ball_centroids(frame_r, 212, 342, 20, 170)
+    frame_r, cent_r = ret_img_and_ball_centroids(frame_r, 220, 350, 20, 170)
     # print("right cent:", cent_r)
     cv2.imshow("right:", frame_r)
 
