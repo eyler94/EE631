@@ -24,6 +24,7 @@ if __name__ == "__main__":
     P2 = np.save('P2.npy',P2)
 
 
+
     # mp1_l, mp2_l = cv2.initUndistortRectifyMap(cameraMatrix_l, distCoeffs_l, R1, P1, (640,480), cv2.CV_32FC2)
     mp1_l, mp2_l = cv2.initUndistortRectifyMap(cameraMatrix_l, distCoeffs_l, R1, P1, (640,480), cv2.CV_32FC2)
     img_l = cv2.imread('stereo_L1.png')

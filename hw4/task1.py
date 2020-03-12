@@ -47,23 +47,31 @@ if __name__=="__main__":
     cv2.imshow("frame_r", img_r)
 
     points = np.zeros((4,1,3))
-    for row_iter, col in enumerate(points):
-        col[0,0] = corners_undistorted_l[row_iter][0][0]
-        col[0,1] = corners_undistorted_l[row_iter][0][1]
-        col[0,2] = corners_undistorted_l[row_iter][0][0]-corners_undistorted_r[row_iter][0][0]
+    row = 0
+    x = 0
+    y = 1
+    disparity = 2
+    for page_iter, page in enumerate(points):
+        page[row][x] = corners_undistorted_l[page_iter][row][x]
+        page[row][y] = corners_undistorted_l[page_iter][row][y]
+        page[row][disparity] = corners_undistorted_l[page_iter][row][x]-corners_undistorted_r[page_iter][row][x]
     # points = points.T
-    print("points:\n", points)
+    # print("points:\n", points)
     Q = np.load('Q.npy')
     points_3d = cv2.perspectiveTransform(points,Q)
     print("3d points:", points_3d)
 
     points = np.zeros((4,1,3))
-    for row_iter, col in enumerate(points):
-        col[0,0] = corners_undistorted_r[row_iter][0][0]
-        col[0,1] = corners_undistorted_r[row_iter][0][1]
-        col[0,2] = corners_undistorted_l[row_iter][0][0]-corners_undistorted_r[row_iter][0][0]
+    row = 0
+    x = 0
+    y = 1
+    disparity = 2
+    for page_iter, page in enumerate(points):
+        page[row][x] = corners_undistorted_r[page_iter][row][x]
+        page[row][y] = corners_undistorted_r[page_iter][row][y]
+        page[row][disparity] = corners_undistorted_l[page_iter][row][x]-corners_undistorted_r[page_iter][row][x]
     # points = points.T
-    print("points:\n", points)
+    # print("points:\n", points)
     Q = np.load('Q.npy')
     points_3d = cv2.perspectiveTransform(points,Q)
     print("3d points:", points_3d)
