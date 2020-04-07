@@ -1,9 +1,11 @@
 *.png
 *.pdf
 *.jpg
+*.jpeg
 *.bmp
 *.avi
 *.mp4
+*.mpg
 *.zip
 ./.idea
 ./hw*/__pycache__/*

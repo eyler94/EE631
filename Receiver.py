@@ -10,7 +10,7 @@ import socket
 host = '127.0.0.1'
 port = 12345
 buffer_size = 1024
-num_rows = 30
+num_rows = 5
 num_cols = 3
 
 # configure udp socket
@@ -23,7 +23,7 @@ s.bind((host, port))
 from neopixel import *
 
 # LED strip configuration:
-LED_1_COUNT      = 30      # Number of LED pixels.
+LED_1_COUNT      = num_rows      # Number of LED pixels.
 LED_1_PIN        = 18      # GPIO pin connected to the pixels (must support PWM! GPIO 13 and 18 on RPi 3).
 LED_1_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_1_DMA        = 10      # DMA channel to use for generating signal (Between 1 and 14)
@@ -32,7 +32,7 @@ LED_1_INVERT     = False   # True to invert the signal (when using NPN transisto
 LED_1_CHANNEL    = 0       # 0 or 1
 LED_1_STRIP      = ws.WS2811_STRIP_GRB
 
-LED_2_COUNT      = 30      # Number of LED pixels.
+LED_2_COUNT      = num_rows      # Number of LED pixels.
 LED_2_PIN        = 13      # GPIO pin connected to the pixels (must support PWM! GPIO 13 or 18 on RPi 3).
 LED_2_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_2_DMA        = 11      # DMA channel to use for generating signal (Between 1 and 14)
@@ -44,14 +44,14 @@ LED_2_STRIP      = ws.WS2811_STRIP_GRB
 
 def blackout(strip):
     for i in range(max(strip1.numPixels(),strip1.numPixels())):
-	strip.setPixelColor(i, Color(0,0,0))
-	strip.show()
+        strip.setPixelColor(i, Color(0,0,0))
+        strip.show()
 
 def colorArray(strip,array):
     for rr, row in enumerate(array):
 #        print("row:", row)
-	strip.setPixelColor(rr, Color(int(row[0]), int(row[1]), int(row[2])))
-	strip.show()
+        strip.setPixelColor(rr, Color(int(row[0]), int(row[1]), int(row[2])))
+        strip.show()
 
 # Main program logic follows:
 if __name__ == '__main__':
@@ -68,8 +68,8 @@ if __name__ == '__main__':
     
     while True:
         byte_array, _ = s.recvfrom(buffer_size)
-	array = np.frombuffer(byte_array, dtype=np.float32)
-	array = np.reshape(array, (num_rows, num_cols))
+        array = np.frombuffer(byte_array, dtype=np.float32)
+        array = np.reshape(array, (num_rows, num_cols))
         colorArray(strip1,array)	
         colorArray(strip2,array)
 
