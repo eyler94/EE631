@@ -8,8 +8,6 @@ sudo sed -i 's/dtparam=audio=on/#dtparam=audio=on/' /boot/config.txt
 
 git clone https://github.com/jgarff/rpi_ws281x
 
-sleep 3
-
 cd ~/rpi_ws281x
 
 sudo scons 
@@ -20,4 +18,6 @@ sudo python3 setup.py build
 
 sudo python3 setup.py install
 
-#sudo reboot
+cp ~/Receiver.py ./examples/
+
+sudo reboot

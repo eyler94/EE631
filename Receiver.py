@@ -10,7 +10,8 @@ import socket
 host = '127.0.0.1'
 port = 12345
 buffer_size = 1024
-num_rows = 5
+num_pages = 2
+num_rows = 25
 num_cols = 3
 
 # configure udp socket
@@ -65,12 +66,10 @@ if __name__ == '__main__':
     # Black out any LEDs that may be still on for the last run
     blackout(strip1)
     blackout(strip2)
-    
+
     while True:
         byte_array, _ = s.recvfrom(buffer_size)
         array = np.frombuffer(byte_array, dtype=np.float32)
-        array = np.reshape(array, (num_rows, num_cols))
-        colorArray(strip1,array)	
-        colorArray(strip2,array)
-
-
+        array = np.reshape(array, (num_pages, num_rows, num_cols))
+        colorArray(strip1,array[0])
+        colorArray(strip2,array[1])

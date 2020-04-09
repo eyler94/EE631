@@ -12,14 +12,16 @@ ret, frame_n = cap.read()
 
 #ProcessTrack
 gray_n = cv2.cvtColor(frame_n, cv2.COLOR_BGR2GRAY)
-PrevPoints = cv2.goodFeaturesToTrack(gray_n, maxCorners=500, qualityLevel=0.1, minDistance=10)
+features = cv2.goodFeaturesToTrack(gray_n, maxCorners=500, qualityLevel=0.01, minDistance=10)
+criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001)
+PrevPoints = cv2.cornerSubPix(gray_n, features, (5,5), (-1,-1), criteria)
+
+cv.TM_CCOEFF_NORMED
 
 m = 1
 win_x, win_y = np.shape(gray_n)[::-1]
 
 cv2.imshow("right:", frame_n)
-cv2.waitKey(8000)
-
 
 while ret:
     for iteration in range(m):

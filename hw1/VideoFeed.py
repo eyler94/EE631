@@ -5,7 +5,7 @@ import cv2
 import imutils
 
 # vs = VideoStream(0).start()
-vs = cv2.VideoCapture(0)
+vs = cv2.VideoCapture(2)
 vs.set(cv2.CAP_PROP_FPS, 15)
 setting = "o" # ordinary
 print("Options:\no: Ordinary\nt: Thresholding\na: Canny Difference\nd: Differencing\nl: Line Detection\nc: Corner Detection\nq: quit")
@@ -20,6 +20,9 @@ while True:
         frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+        kernel = np.ones((5,5))
+        thresh = cv2.dilate(thresh, kernel, iterations = 20)
+        thresh = cv2.erode(thresh, kernel, iterations = 21)
         cv2.imshow("Thresholding", thresh)
         key = cv2.waitKey(1) & 0xFF
     elif setting=="a": # Canny difference
@@ -60,7 +63,7 @@ while True:
     elif setting=="c": # Corner detection
         frame = imutils.resize(frame, width=600)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        features = cv2.goodFeaturesToTrack(gray, maxCorners=100, qualityLevel=0.1, minDistance=10)
+        features = cv2.goodFeaturesToTrack(gray, maxCorners=100, qualityLevel=0.1, minDistance=20)
         criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 100, 0.001)
         corners = cv2.cornerSubPix(gray, features, (5,5), (-1,-1), criteria)
         if corners is not None: # if there are corners detected
