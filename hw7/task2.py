@@ -31,7 +31,7 @@ PrevPoints = cv2.goodFeaturesToTrack(gray_n[y:y+height, x:x+width], maxCorners=5
 PrevPoints[:,0]+=x
 PrevPoints[:,1]+=y
 
-tau_list = []
+dis_list = []
 
 frame_list = list(range(2,19))
 
@@ -60,7 +60,7 @@ for spot in range(2,19):
                 spot-=1
             spot+=1
         a = np.mean(a_list)
-        tau_list.append(a/(a-1))
+        dis_list.append(a/(a-1)*15.25)
 
 
     PrevPoints = NextPoints
@@ -69,18 +69,18 @@ for spot in range(2,19):
     cv2.imshow("right:", frame_n)
     cv2.waitKey(5)
 
-coef = np.polyfit(frame_list, tau_list, 1)
+coef = np.polyfit(frame_list, dis_list, 1)
 poly = np.poly1d(coef)
 framez = np.linspace(0,50,100)
-tau = poly(framez)
-tau_expect = np.roots(coef)
+dis = poly(framez)
+dis_expect = poly(0)
 
 fig = plt.figure()
-plt.plot(framez, tau)
-plt.plot(frame_list, tau_list,'bh')
-plt.title(f'frames till impact: {tau_expect} frames')
+plt.plot(framez, dis)
+plt.plot(frame_list, dis_list,'bh')
+plt.title(f'Distance to impact: {dis_expect} mm')
 plt.xlabel('Frames')
-plt.ylabel('Estimate Frames till impact')
+plt.ylabel('Distance to impact (mm)')
 plt.xlim([-1,50])
 plt.ylim(bottom=0)
 plt.show()

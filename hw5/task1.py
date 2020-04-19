@@ -34,7 +34,7 @@ while ret:
 
     if PrevPoints is not None: # if there are corners detected
         spot = 0
-        for Ppoint, Npoint in zip(PrevPoints, NextPoints): # why is there a ghost artifact in the first element
+        for Ppoint, Npoint in zip(PrevPoints, NextPoints):
             Px,Py = Ppoint[0]
             Nx, Ny = Npoint[0]
             cv2.circle(frame_n, (Px, Py), 2, (0, 255, 0), 4)
